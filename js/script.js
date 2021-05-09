@@ -1,24 +1,100 @@
-"use strict";
 
 
-const numberOfFilms = +prompt("how many films...?","");
+var currentTab = 0; // Current tab is set to be the first tab (0)
+showTab(currentTab); // Display the current tab
 
-const personalMovieDB = {
+function showTab(n) {
+  // This function will display the specified tab of the form...
+  var x = document.getElementsByClassName("tab");
+  x[n].style.display = "block";
+  //... and fix the Previous/Next buttons:
+  if (n == 0) {
+    document.getElementById("prevBtn").style.display = "none";
+  } else {
+    document.getElementById("prevBtn").style.display = "inline";
+  }
+  if (n == (x.length - 1)) {
+    document.getElementById("nextBtn").innerHTML = "Submit";
+  } else {
+    document.getElementById("nextBtn").innerHTML = "Next";
+  }
+  //... and run a function that will display the correct step indicator:
+  fixStepIndicator(n);
+}
 
-    count: numberOfFilms,
-    movies : {},
-    actors : {},
-    genres : [],
-    privat : false
+function nextPrev(n) {
+  // This function will figure out which tab to display
+  var x = document.getElementsByClassName("tab");
+  // Exit the function if any field in the current tab is invalid:
+  if (n == 1 && !validateForm()) return false;
+  // Hide the current tab:
+  x[currentTab].style.display = "none";
+  // Increase or decrease the current tab by 1:
+  currentTab = currentTab + n;
+  // if you have reached the end of the form...
+  if (currentTab >= x.length) {
+    // ... the form gets submitted:
+    document.getElementById("statusForm").submit();
+    return false;
+  }
+  // Otherwise, display the correct tab:
+  showTab(currentTab);
+}
 
-};
+//validation of the form fields
+function validateForm() {
+ 
+  var x, y, i, valid = true;
+  x = document.getElementsByClassName("tab");
+  y = x[currentTab].getElementsByTagName("input");
 
-const   a = prompt('one of the latest films?',''),
-        b = prompt("rate it", ''),
-        c = prompt('one of the latest films?',''),
-        d = prompt("rate it", '');
+  for (i = 0; i < y.length; i++) {
 
-personalMovieDB.movies[a]=b;
-personalMovieDB.movies[c]=d;
+    if (y[i].value == "") {
+    
+      y[i].className += " invalid";
+      
+      valid = false;
+    }
+  }
+  
+  if (valid) {
+    document.getElementsByClassName("step")[currentTab].className += " finish";
+  }
+  return valid; 
+}
 
-console.log(personalMovieDB);
+function fixStepIndicator(n) {
+ 
+  var i, x = document.getElementsByClassName("step");
+  for (i = 0; i < x.length; i++) {
+    x[i].className = x[i].className.replace(" active", "");
+  }
+ 
+  x[n].className += " active";
+}
+
+//years
+    start = 1970;
+    var end = 2010;
+    var options = "";
+    for(var year = start ; year <=end; year++){
+      options += "<option>"+ year +"</option>";
+    }
+    document.getElementById("year").innerHTML = options;
+    
+    
+
+
+// output
+
+
+function showInput() {
+  document.getElementById('display').innerHTML = 
+              document.getElementById("status").value
+              +document.getElementById("year").value
+              +document.getElementById("gender").value;
+}
+
+
+
